@@ -85,7 +85,7 @@ export default function View({ handleModify }) {
   // 새 DB 데이터가 /uploads/파일명.jpg 형태여도,
   // 파일명만 뽑아서 정상 이미지 URL 생성
   const imageName = content.image ? content.image.split("/").pop() : null;
-  const imageUrl = imageName ? `/uploads/${imageName}` : null;
+  const imageUrl = imageName ? `uploads/${imageName}` : null;
 
   return (
     <>
