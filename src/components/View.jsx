@@ -16,15 +16,15 @@ export default function View({ handleModify }) {
   const [isError, setIsError] = useState(false);
 
   const { id } = useParams();
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
   useEffect(() => {
     axios
       .get(`${API_URL}/view?id=${id}`)
       .then(response => {
-        console.log(response.data); // [{...}]
-
-        // data가 없거나 data 배열의 개수가 0이면
+        console.log(response.data); //[{..}]
+        //setContent(response.data);
+        //data가 없거나 data의 배열의 개수가 0가 같다면
         if (!response.data || response.data.length === 0) {
           setIsError(true);
           return;
@@ -47,7 +47,7 @@ export default function View({ handleModify }) {
       .finally(() => {
         console.log("요청완료");
       });
-  }, [id]);
+  }, []);
 
   if (isError) {
     return (
@@ -60,11 +60,9 @@ export default function View({ handleModify }) {
       </div>
     );
   }
-
   const handleClick = () => {
     handleModify(id);
   };
-
   const handleDelete = () => {
     if (window.confirm("정말 삭제할까요")) {
       axios
@@ -80,43 +78,28 @@ export default function View({ handleModify }) {
         .finally(() => {});
     }
   };
-
-  // 기존 DB 데이터가 절대경로여도,
-  // 새 DB 데이터가 /uploads/파일명.jpg 형태여도,
-  // 파일명만 뽑아서 정상 이미지 URL 생성
-  const imageName = content.image ? content.image.split("/").pop() : null;
-  const imageUrl = imageName ? `uploads/${imageName}` : null;
-
   return (
     <>
       <h2>{content.title}</h2>
-
       <div className="d-flex justify-content-between">
         <p>글쓴이: {content.writer}</p>
         <p>{content.date}</p>
       </div>
-
       <hr />
-
-      <p>{content.content}</p>
-
-      {imageUrl && (
+      {content.content}
+      {content.image && (
         <div>
-          <img src={imageUrl} alt={content.title} style={{ maxWidth: "80%" }} />
+          <img src={`${content.image}`} alt={content.title} style={{ maxWidth: "80%" }} />
         </div>
       )}
-
       <hr />
-
       <div className="d-flex gap-1 justify-content-end">
         <Link to="/" className="btn btn-primary">
           홈
         </Link>
-
         <Button variant="secondary" onClick={handleClick}>
           수정
         </Button>
-
         <Button variant="danger" onClick={handleDelete}>
           삭제
         </Button>
